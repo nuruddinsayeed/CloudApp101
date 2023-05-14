@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import time
+import requests, base64
 
 import torch
 
@@ -148,6 +149,7 @@ def capture_cont():
             frame = ditected
         else:
             print("Not Detected")
+        send_data(frame=frame)
         
         
         if cv2.waitKey(1) == ord('q'):
@@ -158,6 +160,27 @@ def capture_cont():
         
     cap.release()
     cv2.destroyAllWindows()
+    
+def send_data(frame):
+    print('test request')
+    requests.get(url='http://192.168.0.25:8000/api', data={})
+    
+    # filename = "requirements.txt"
+    # files = {'my_file': (filename, open(filename, 'rb'))}
+    json = {'first': "Hello", 'second': "World"}
+    encoded, buffer = cv2.imencode('.jpeg', frame)
+    jpg_as_text = base64.b64encode(buffer)
+    jpg_as_text = buffer.tobytes()
+    print(f'Type: {type(jpg_as_text)}')
+
+    response = requests.post(
+        url='http://192.168.0.25:8000/api',
+        files={"image": jpg_as_text},
+        data={'first': "Hello", 'second': "World"}
+        # headers={"Content-Type": "application/json"}
+    )
+    print("success")
+    print(response.json())
     
 
 if __name__ == '__main__':

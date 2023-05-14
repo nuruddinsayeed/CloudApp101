@@ -1,47 +1,9 @@
-import functools
-import logging
-
-from pydantic import BaseSettings, BaseModel
-
-ALLOWED_ORIGINS = [
-    "http://localhost",
-    "http://localhost:8080",
-]
-
-
-CFG_LOGGER = logging.getLogger("cloud_computing_logger")
-
-
-class _Settings(BaseSettings):
-    """Receive required environment variable from environment or .env file"""
-
-    cloud_comp_host: str = "127.0.0.1"
-    cloud_comp_port: int = 8000
-    cloud_comp_access_key: str = "MySuperSecretAccessKey"
-    jwt_token_algo:str = "HS256"
-    cloud_comp_secret_key: str = "MySuperSecretApiKey"
-
-    debug: bool = False
-    debug_exceptions: bool = False
-
-    class Config:
-        env_file = ".env"
-        env_file_encoding = 'utf-8'
-
-
-@functools.lru_cache()
-def get_settings(**kwargs) -> _Settings:
-
-    CFG_LOGGER.info("Loading Config settings from Environment ...")
-
-    return _Settings(**kwargs)
-
-SETTINGS = get_settings()
+from pydantic import BaseModel
 
 class LogConfig(BaseModel):
     """Logging configuration to be set for the server"""
 
-    LOGGER_NAME: str = "spn_logger"
+    LOGGER_NAME: str = "cloud_computing_logger" # TODO: Make it dynamic
     LOG_FORMAT: str = "[%(asctime)s] %(levelname)s [%(thread)d - %(threadName)s] in %(module)s - %(message)s"
     LOG_LEVEL: str = "DEBUG"
 

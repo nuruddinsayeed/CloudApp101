@@ -1,7 +1,7 @@
 
 import uvicorn
 
-from app.settings.configs import get_settings
+from app.Configs.server_configs import get_settings
 
 APP_SETTINGS = get_settings()
 

@@ -5,19 +5,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app import app_version
-from app.helpers import file_helper
-from logging.config import dictConfig
-from app.settings.configs import get_settings, LogConfig, ALLOWED_ORIGINS
+from app.Configs.server_configs import get_settings, ALLOWED_ORIGINS
+from app.Configs.app_configs import AppConfig
+from app.Configs.log_cofigs import LogConfig
+
+from app.api import router as api_router
 
 
-CLOUD_LOGGER = logging.getLogger("cloud_computing_logger")
 settings = get_settings()
-
-
-# ############
-# FastAPI App
-# ############
-
 def get_app() -> FastAPI:
     """Returns fastapi app"""
     
@@ -46,15 +41,8 @@ def get_app() -> FastAPI:
 # initialize app
 app = get_app()
 
-
-@app.on_event('startup')
-async def startup_event():
     
-    file_helper.create_log_dir()
-    dictConfig(LogConfig().dict())
-    
-    CLOUD_LOGGER.info("Animal detectoin webapp started running....")
-    
-@app.on_event("shutdown")
-async def shutdown_event():
-    CLOUD_LOGGER.warning("Amimal Detector Server just stopped")
+# configure app
+app_config = AppConfig(app=app)
+app_config.configure_startup_shoudown(log_configs=LogConfig())
+app_config.configure_router(routers=[api_router])
