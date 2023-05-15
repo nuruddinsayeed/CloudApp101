@@ -1,5 +1,8 @@
+import datetime
+from typing import Dict
 from pydantic import BaseModel
 
 
 class SensorData(BaseModel):
-    message: str
+    datetime: str
+    confidances: list

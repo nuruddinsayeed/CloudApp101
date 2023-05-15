@@ -25,7 +25,8 @@ class LogConfig(BaseModel):
         },
         'logfile': {
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'app/Logs/logs.log',
+            # 'filename': 'app/Logs/logs.log',
+            'filename': '/usr/src/app/app/Logs/logs.log',
             'formatter': 'default',
             'maxBytes': 1000000,
             'backupCount': 10,

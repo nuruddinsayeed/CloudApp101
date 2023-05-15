@@ -2,14 +2,16 @@ version: '3.8'
 services:
   animal_detector:
     # image: dev.dockerhub.nuruddinsayeed.store/animal_detector:latest
-    container_name: 'animal_detector'
-    build: ./
-    # ports:
-    #   - 39391:39391
+    container_name: 'animal_detector_server'
+    build:
+      context: ./
+      dockerfile: ./Docker/Dockerfile
+    ports:
+      - 39391:39391
     environment:
       - ENV=docker
       - TZ=Europe/Berlin
     volumes:
       - ./:/usr/src/app:ro # read-only volume
-      - ./Logs/:/usr/src/app/Logs/
+      - ./Logs/:/usr/src/app/app/Logs/
     restart: on-failure
