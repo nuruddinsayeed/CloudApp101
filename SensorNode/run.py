@@ -130,7 +130,7 @@ def send_data(frame, result: DetectionResult):
     
     sensor_data = {
         'datetime': result.detected_at.strftime("%m/%d/%Y, %H:%M:%S"),
-        'confidances': [(conf.animal_name, conf.confidance_ratio) for conf in result.confidences]
+        'confidances': [(conf.animal_name, float("{:.2f}".format(conf.confidance_ratio))) for conf in result.confidences]
         }
 
     result = requests.post(

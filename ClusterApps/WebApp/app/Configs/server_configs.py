@@ -20,6 +20,12 @@ class _Settings(BaseSettings):
     cloud_comp_access_key: str = "MySuperSecretAccessKey"
     jwt_token_algo:str = "HS256"
     cloud_comp_secret_key: str = "MySuperSecretApiKey"
+    
+    mysql_host: str = "0.0.0.0"
+    mysql_port: int = 3306
+    mysql_user: str = "root"
+    mysql_password: str = "mongopassword"
+    mysql_db_name: str = "detection_data"
 
     debug: bool = False
     debug_exceptions: bool = False

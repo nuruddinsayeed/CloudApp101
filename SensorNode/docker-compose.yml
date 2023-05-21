@@ -4,8 +4,8 @@ services:
     # image: dev.dockerhub.nuruddinsayeed.store/animal_detector:latest
     container_name: 'animal_detector'
     build: ./
-    # ports:
-    #   - 39391:39391
+    ports:
+      - 3306:3306
     environment:
       - ENV=docker
       - TZ=Europe/Berlin
