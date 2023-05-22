@@ -8,7 +8,7 @@ class BaseRepository:
         self._cur = cur
         
     @property
-    def connection(self) -> Cursor:cd
+    def connection(self) -> Cursor:
         self._cur
         
     async def execute(self, query: str, *query_params: Any) -> int:

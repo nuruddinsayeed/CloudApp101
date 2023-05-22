@@ -4,56 +4,49 @@ from fastapi import APIRouter, UploadFile, File, Form
 
 import aiofiles
 from fastapi import Depends
+from minio import Minio
 
 from app.schemas.sensor_schema import SensorData
 from app.db.repositories.sensor_repo import SensorRepository
 from app.api.dependencies.database import get_repository
+from app.db import get_minio_conn
+from app.db.repositories.image_repo import ImageRepo
+from app.Configs.app_configs import MINIO_ANIMAL_BUCKET
 
 router = APIRouter()
 
 
 
-# @router.post("/", name="sensor_data")
-# async def sensor_data_upload(
-#     datetime: str = Form(...),
-#     confidances: list = Form(...),
-#     image: UploadFile = File(...)) -> None:
+@router.get("/", name="api_home")
+async def api_home(
+    sensor_repo: SensorRepository = Depends(get_repository(SensorRepository))):
     
-#     from app.helpers import file_helper
-#     image_path = file_helper.get_log_dir() / 'image.png'
-    
-#     async with aiofiles.open(image_path, 'wb') as wb_file:
-#             image_data = await image.read()
-#             await wb_file.write(image_data)
-#             await wb_file.flush()
-            
-#     # Store the data:
-    
-    
-#     return {
-#         "datetime": datetime,
-#         "confidances": confidances
-#     }
+    await sensor_repo.get_all_data()
+    return {
+        "greedings": "Helo world"
+    }
 
 @router.post("/", name="sensor_data")
 async def sensor_data_upload(
     datetime: str = Form(...),
     confidances: list = Form(...),
     image: UploadFile = File(...),
+    minio_client: Minio = Depends(get_minio_conn),
     sensor_repo: SensorRepository = Depends(get_repository(SensorRepository))
     ) -> None:
     
-    from app.helpers import file_helper
-    image_path = file_helper.get_log_dir() / 'image.png'
+    # from app.helpers import file_helper
+    # image_path = file_helper.get_log_dir() / 'image.png'
+    # async with aiofiles.open(image_path, 'wb') as wb_file:
+    #         image_data = await image.read()
+    #         await wb_file.write(image_data)
+    #         await wb_file.flush()
     
-    async with aiofiles.open(image_path, 'wb') as wb_file:
-            image_data = await image.read()
-            await wb_file.write(image_data)
-            await wb_file.flush()
+    image = await image.read()
+    im_name, _ = ImageRepo(minio_client=minio_client, bucket=MINIO_ANIMAL_BUCKET).upload_image(image=image)
     
     # Store the data:
     sensor_id = await sensor_repo.insert_sensor_data(detected_at=datetime)
-    print(f'+++++ {sensor_id}')
     for confidance_data in confidances:
         confidance_data = make_tuple(confidance_data)
         animal_name, confidance = confidance_data
@@ -68,12 +61,27 @@ async def sensor_data_upload(
         "confidances": confidances
     }
 
+
+# @router.post("/upload")
+# async def upload(image: UploadFile = File(...), minio_client: Minio = Depends(get_minio_conn)):
     
-@router.get("/", name="api_home")
-async def api_home(
-    sensor_repo: SensorRepository = Depends(get_repository(SensorRepository))):
+#     image = await image.read()
+#     image_rep = ImageRepo(minio_client=minio_client, bucket=MINIO_ANIMAL_BUCKET)
+#     image_rep.upload_image(image=image)
     
-    await sensor_repo.get_all_data()
-    return {
-        "greedings": "Helo world"
-    }
+#     return {
+#         "greedings": "Helo world"
+#     }
+
+@router.get("/get-image")
+async def get_image(minio_client: Minio = Depends(get_minio_conn)):
+    
+    image_repo = ImageRepo(minio_client=minio_client, bucket=MINIO_ANIMAL_BUCKET)
+    image_data = image_repo.get_image(image_name="9ecbbb1563784cf3ada81b0acdcc5630.jpg")
+    
+    from app.helpers import file_helper
+    image_path = file_helper.get_log_dir() / 'image_from_minio.png'
+    async with aiofiles.open(image_path, 'wb') as wb_file:
+            # image_data = await image.read()
+            await wb_file.write(image_data)
+            await wb_file.flush()

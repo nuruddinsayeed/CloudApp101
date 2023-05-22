@@ -5,6 +5,8 @@ from fastapi import FastAPI
 from app.helpers import file_helper
 from logging.config import dictConfig
 from app.db.events import connect_to_db, close_conneciton
+from app.db import get_minio_conn
+from app.Configs.app_variables import MINIO_ANIMAL_BUCKET
 
 
 
@@ -24,6 +26,13 @@ class AppConfig():
         async def start_app() -> None:
             file_helper.create_log_dir()
             # dictConfig(log_configs.dict())
+            
+            # MINIO
+            minio = get_minio_conn()
+            if not minio.bucket_exists(MINIO_ANIMAL_BUCKET):
+                minio.make_bucket(MINIO_ANIMAL_BUCKET)
+            
+            # MySQL
             await connect_to_db(app=self.app)
             
         return start_app

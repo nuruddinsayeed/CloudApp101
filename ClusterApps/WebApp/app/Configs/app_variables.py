@@ -1,0 +1,1 @@
+MINIO_ANIMAL_BUCKET: str = "detectedanimals"

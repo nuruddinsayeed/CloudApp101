@@ -122,6 +122,25 @@ class AnimelDetector():
             cv2.FONT_HERSHEY_SIMPLEX, font_scale, (0,255,0), font_thickness)
         
         
+# def send_data(frame, result: DetectionResult):
+    
+#     encoded, buffer = cv2.imencode('.jpeg', frame)
+#     jpg_as_text = base64.b64encode(buffer)
+#     jpg_as_text = buffer.tobytes()
+    
+#     sensor_data = {
+#         'datetime': result.detected_at.strftime("%m/%d/%Y, %H:%M:%S"),
+#         'confidances': [(conf.animal_name, float("{:.2f}".format(conf.confidance_ratio))) for conf in result.confidences]
+#         }
+
+#     result = requests.post(
+#         url=API + "/upload",
+#         files={"image": jpg_as_text}
+#         # data=sensor_data
+#     )
+    
+#     print(result.json())
+    
 def send_data(frame, result: DetectionResult):
     
     encoded, buffer = cv2.imencode('.jpeg', frame)

@@ -26,6 +26,11 @@ class _Settings(BaseSettings):
     mysql_user: str = "root"
     mysql_password: str = "mongopassword"
     mysql_db_name: str = "detection_data"
+    
+    minio_host: str = "0.0.0.0"
+    minio_port: int = 9000
+    minio_accsess_key: str = "minioaccesskey"
+    minio_secret_key: str = "miniosecretkey"
 
     debug: bool = False
     debug_exceptions: bool = False
