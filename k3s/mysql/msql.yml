@@ -14,7 +14,7 @@ spec:
         app: mysql
     spec:
       containers:
-        - image: mysql:5.7
+        - image: mysql:latest
           name: mysql
           env:
             - name: MYSQL_USER
@@ -41,9 +41,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql
+  name: mysql-service
 spec:
-  ports:
-    - port: 3306
   selector:
     app: mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306

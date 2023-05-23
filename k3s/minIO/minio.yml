@@ -37,8 +37,8 @@ spec:
                 secretKeyRef:
                   name: kubectl-secret
                   key: minio-secret
-            volumeMounts:
-            - name: storage 
+          volumeMounts:
+            - name: storage
               mountPath: "/storage"
 ---
 apiVersion: v1
@@ -50,5 +50,5 @@ spec:
     app: minio
   ports:
     - protocol: TCP
-      port: 27017
-      targetPort: 27017
+      port: 9000
+      targetPort: 9000

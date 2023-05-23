@@ -5,10 +5,14 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /usr/src/app
 COPY requirements.txt ./
 
-RUN apt-get update
+# RUN apt-get update && apt-get install -y mariadb-dev
+# RUN apt-get install mariadb-dev
+RUN apt update
 
+# RUN apt update --no-cache --virtual .tmp-build-deps \
+#     gcc libc-dev linux-headers musl-dev
 RUN pip install --no-cache-dir -r requirements.txt
-# RUN apk del .tmp-build-deps
+# RUN apt del .tmp-build-deps
 
 COPY . .
 

@@ -16,18 +16,19 @@ class _Settings(BaseSettings):
     """Receive required environment variable from environment or .env file"""
 
     cloud_comp_host: str = "0.0.0.0"
-    cloud_comp_port: int = 39391
+    # cloud_comp_host: str
+    cloud_comp_port: int = 8080
     cloud_comp_access_key: str = "MySuperSecretAccessKey"
     jwt_token_algo:str = "HS256"
     cloud_comp_secret_key: str = "MySuperSecretApiKey"
     
-    mysql_host: str = "0.0.0.0"
+    mysql_host: str = "127.0.0.1"
     mysql_port: int = 3306
     mysql_user: str = "root"
     mysql_password: str = "mongopassword"
     mysql_db_name: str = "detection_data"
     
-    minio_host: str = "0.0.0.0"
+    minio_host: str = "192.168.0.25"
     minio_port: int = 9000
     minio_accsess_key: str = "minioaccesskey"
     minio_secret_key: str = "miniosecretkey"
