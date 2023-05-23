@@ -46,7 +46,7 @@ async def sensor_data_upload(
     im_name, _ = ImageRepo(minio_client=minio_client, bucket=MINIO_ANIMAL_BUCKET).upload_image(image=image)
     
     # Store the data:
-    sensor_id = await sensor_repo.insert_sensor_data(detected_at=datetime)
+    sensor_id = await sensor_repo.insert_sensor_data(image_name=im_name, detected_at=datetime)
     for confidance_data in confidances:
         confidance_data = make_tuple(confidance_data)
         animal_name, confidance = confidance_data

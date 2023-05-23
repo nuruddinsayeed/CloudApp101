@@ -39,7 +39,7 @@ class AppConfig():
             
     def __run_shutdouwn_events(self) -> Callable:
         async def stop_app() -> None:
-            await close_conneciton(app=self.app)
+            close_conneciton(app=self.app)
             CLOUD_LOGGER.warning("Amimal Detector Server just stopped")
             
         return stop_app

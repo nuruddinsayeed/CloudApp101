@@ -3,8 +3,8 @@ import logging
 from app.db.repositories.base_repo import BaseRepository
 
 INSERT_SENSOR_DATA = """
-INSERT INTO sensor_data (detected_at)
-VALUES (%s)
+INSERT INTO sensor_data (image_name, detected_at)
+VALUES (%s, %s)
 """
 
 INSERT_CONFIDANCE_DATA = """
@@ -17,10 +17,10 @@ SELECT * FROM sensor_data
 """
 
 class SensorRepository(BaseRepository):
-    async def insert_sensor_data(self, detected_at: str) -> int:
+    async def insert_sensor_data(self, image_name: str, detected_at: str) -> int:
         sensor_id = await self.execute(
             INSERT_SENSOR_DATA,
-            [detected_at]
+            [image_name, detected_at]
         )
         return sensor_id
         
