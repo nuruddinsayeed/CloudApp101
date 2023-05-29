@@ -1,8 +1,7 @@
-from typing import Tuple, List
 from ast import literal_eval as make_tuple
+from datetime import datetime
 from fastapi import APIRouter, UploadFile, File, Form
 
-import aiofiles
 from fastapi import Depends
 from minio import Minio
 
@@ -17,18 +16,27 @@ router = APIRouter()
 
 
 
-# @router.get("/", name="api_home")
-# async def api_home(
-#     sensor_repo: SensorRepository = Depends(get_repository(SensorRepository))):
+@router.get("/", name="api_home")
+async def api_home(
+    sensor_repo: SensorRepository = Depends(get_repository(SensorRepository))):
     
-#     await sensor_repo.get_all_data()
-#     return {
-#         "greedings": "Helo world"
-#     }
+    await sensor_repo.get_sensor_data()
+    return {
+        "greedings": "Helo world"
+    }
+    
+@router.get("/sensor-data", name="api_home")
+async def api_home(
+    sensor_repo: SensorRepository = Depends(get_repository(SensorRepository))):
+    
+    data = await sensor_repo.get_sensor_data()
+    return {
+        "Sensor Data": data
+    }  
 
 @router.post("/", name="sensor_data")
 async def sensor_data_upload(
-    datetime: str = Form(...),
+    detected_at: datetime = Form(...),
     confidances: list = Form(...),
     image: UploadFile = File(...),
     minio_client: Minio = Depends(get_minio_conn),
@@ -41,7 +49,7 @@ async def sensor_data_upload(
     #         image_data = await image.read()
     #         await wb_file.write(image_data)
     #         await wb_file.flush()
-    
+
     image = await image.read()
     im_name, _ = ImageRepo(minio_client=minio_client, bucket=MINIO_ANIMAL_BUCKET).upload_image(image=image)
     
@@ -50,7 +58,7 @@ async def sensor_data_upload(
         animal_name, confidance = make_tuple(confidance_data)
         confis.append(Confidance(animal_name=animal_name, confidance_ratio=confidance))
         
-    await sensor_repo.save_sensor_data(data=SensorData(image_name=im_name, detected_at=datetime, confidances=confis))
+    await sensor_repo.save_sensor_data(data=SensorData(image_name=im_name, detected_at=detected_at, confidances=confis))
     
     # sensor_id = await sensor_repo.insert_sensor_data(image_name=im_name, detected_at=datetime)
     # for confidance_data in confidances:
@@ -63,7 +71,7 @@ async def sensor_data_upload(
     
     
     return {
-        "datetime": datetime,
+        "datetime": detected_at,
         "confidances": confidances
     }
 

@@ -151,7 +151,8 @@ def send_data(frame, result: DetectionResult):
     jpg_as_text = buffer.tobytes()
     
     sensor_data = {
-        'datetime': result.detected_at.strftime("%m/%d/%Y, %H:%M:%S"),
+        # 'datetime': result.detected_at.strftime("%m-%d-%Y, %H:%M:%S"),
+        'detected_at': result.detected_at,
         'confidances': [(conf.animal_name, float("{:.2f}".format(conf.confidance_ratio))) for conf in result.confidences]
         }
 

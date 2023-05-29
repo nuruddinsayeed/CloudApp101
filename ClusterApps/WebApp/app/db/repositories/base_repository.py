@@ -1,5 +1,5 @@
 from string import Template
-from typing import Any, Sequence, Tuple, List
+from typing import Any, Sequence, Tuple, List, Union
 from aiomysql.cursors import Cursor
 from abc import ABC, abstractmethod
 
@@ -11,9 +11,12 @@ _FETCH_ALL = Template(
     "SELECT * FROM $TABLE_NAME"
 )
 
-_FETCH_BY_CLAUSE = Template(
-    "SELECT $COLUMNS FROM $TABLE WHERE $CLAUSE"
+_FETCH_COLS = Template(
+    "SELECT $COLUMNS FROM $TABLE"
 )
+
+_WHARE = Template("WHERE $CLAUSE")
+
 
 class QueryBuilderBase(ABC):
     
@@ -34,7 +37,7 @@ class QueryBuilderBase(ABC):
         ...
         
     @abstractmethod
-    def read():
+    def fetch():
         ...
         
     @abstractmethod
@@ -55,8 +58,8 @@ class BaseRepository:
         
         return created_id
         
-    async def save_many(self, query: str, *queryparams: Sequence[Tuple[Any, ...]]) -> None:
-        await self._cur.executemany(query, *queryparams)
+    async def save_many(self, query: str, queryparams: Sequence[Tuple[Any, ...]]) -> None:
+        await self._cur.executemany(query, queryparams)
         
     async def fetch_one(self, query: str, *queryparams: Any) -> Any:
         await self._cur.execute(query, *queryparams)
@@ -72,7 +75,8 @@ class MySQLQueryBuilder(QueryBuilderBase):
     def __init__(self) -> None:
         self._insert_template = _INSERT_DATA
         self._fetch_all_template = _FETCH_ALL
-        self._fetch_by_clause = _FETCH_BY_CLAUSE
+        self._fetch_cols = _FETCH_COLS
+        self._whare = _WHARE
         self._query = ""
         
     def query(self):
@@ -93,19 +97,26 @@ class MySQLQueryBuilder(QueryBuilderBase):
     def delete(self):
         pass
     
-    def read(self, table: str, columns: List[str] = None, and_condition_Cols: List[str] = None,
-             or_condition_cols: List[str] = None):
+    def fetch(self, table: str, columns: List[str] = None):
         
         cloumns = " *" if not columns else ", ".join[columns]
-        clause = ""
-        clause = " AND ".join([f'{col} = %s' for col in and_condition_Cols])
-        clause += " OR ".join([f'{col} = %s' for col in or_condition_cols])
-        
-        self._query = self._fetch_by_clause.substitute(COLUMNS=cloumns, TABLE=table, CLAUSE=clause)
+        self._query = self._fetch_cols.substitute(COLUMNS=cloumns, TABLE=table)
         
         return self
     
+    def where(self, sql_condition: str):
+        self._query += f" {self._whare.substitute(CLAUSE=sql_condition)}"
+        
+        return self
+    
+    def order_by(self, order_by: Union[str, List[str]], desc: bool = False):
+        order_by = order_by if not isinstance(order_by, list) else ", ".join(order_by)
+        sort = "ASC" if not desc else "DESC"
+        
+        self._query += f" ORDER BY {order_by} {sort}"
+        return self
+    
     def limit(self, limit: int):
-        self._query += self._query + f" LIMIT {int(limit)}"
+        self._query += f" LIMIT {int(limit)}"
         
         return self

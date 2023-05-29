@@ -9,7 +9,7 @@ table_sql = {
         CREATE TABLE {TABLE_SENSOR} (
             id int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
             image_name VARCHAR(255) NOT NULL,
-            detected_at VARCHAR(255) NOT NULL,
+            detected_at timestamp NOT NULL,
             created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         );

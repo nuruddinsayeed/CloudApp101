@@ -7,7 +7,7 @@ class BaseRepository:
     def __init__(self, cur: Cursor, conn) -> None:
         self._cur = cur
         self._conn = conn
-        git
+        
     @property
     def connection(self) -> Cursor:
         self._cur
