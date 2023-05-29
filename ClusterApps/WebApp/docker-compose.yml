@@ -1,12 +1,12 @@
-version: '3.8'
+version: '3.3'
 services:
   animal_detector:
     # image: dev.dockerhub.nuruddinsayeed.store/animal_detector:latest
-    image: nuruddinsayeed/webapp-animal_detector
-    # container_name: 'animal_detector_server'
-    # build:
-    #   context: ./
-    #   dockerfile: ./Docker/Dockerfile
+    # image: nuruddinsayeed/webapp-animal_detector
+    container_name: 'animal_detector_app'
+    build:
+      context: ./
+      dockerfile: ./Docker/Dockerfile
     ports:
       - 8080:8080
     environment:

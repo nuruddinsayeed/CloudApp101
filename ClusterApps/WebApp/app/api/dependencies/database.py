@@ -5,7 +5,7 @@ from aiomysql.pool import Pool
 from starlette.requests import Request
 from fastapi import Depends
 
-from app.db.repositories.base_repo import BaseRepository
+from app.db.repositories.base_repository import BaseRepository
 
 
 

@@ -4,35 +4,13 @@ import aiomysql
 from app.Configs.app_variables import TABLE_CONDIDANCE, TABLE_SENSOR
 
 
-# CREATE_CONFIDANCE_TABLE = f"""
-# CREATE TABLE {TABLE_CONDIDANCE} (
-#     id int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-#     animal_name VARCHAR(255) NOT NULL,
-#     confidance_ratio INT NOT NULL,
-#     sensor_data_id INT NOT NULL,
-#     FOREIGN KEY (sensor_data_id)
-#         REFERENCES sensor_data (id)
-#         ON UPDATE RESTRICT ON DELETE CASCADE
-# );
-# """
-
-# CREATE_SENSOR_TABLE = f"""
-# CREATE TABLE {TABLE_SENSOR} (
-#   id int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-#   image_name VARCHAR(255) NOT NULL,
-#   detected_at VARCHAR(255) NOT NULL,
-#   created_at timestamp NULL DEFAULT NULL,
-#   updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-# );
-# """
-
 table_sql = {
     TABLE_SENSOR: f"""
         CREATE TABLE {TABLE_SENSOR} (
             id int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
             image_name VARCHAR(255) NOT NULL,
             detected_at VARCHAR(255) NOT NULL,
-            created_at timestamp NULL DEFAULT NULL,
+            created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         );
         """,
@@ -48,6 +26,7 @@ table_sql = {
         );
     """
 }
+
 
 async def get_all_talbe_names(cursor) -> List[str]:
     await cursor.execute('SHOW tables;')

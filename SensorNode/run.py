@@ -8,7 +8,10 @@ import requests, base64
 
 
 
-API = 'http://192.168.0.25:39391/api'
+# API = 'http://192.168.0.25:39391/api'
+API = 'http://0.0.0.0:8080/api'
+# API = 'http://192.168.0.60:30080/api'
+
 MODEL_PATH = "best.pt"
 # DEVICE = "cuda" if not torch.cuda.is_available() else "cpu"
 DEVICE = "cpu"
