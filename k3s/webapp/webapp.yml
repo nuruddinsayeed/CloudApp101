@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: animal-detector
-          image: nuruddinsayeed/webapp-animal_detector:latest
+          image: nuruddinsayeed/webapp-animal_detector:102
           ports:
             - containerPort: 8080
           env:
@@ -75,11 +75,11 @@ kind: Service
 metadata:
   name: webapp-service
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
-    app: animal-detector
+    app: webapp
   ports:
     - protocol: TCP
       port: 8080
       targetPort: 8080
-      nodePort: 30000
+      nodePort: 30080
