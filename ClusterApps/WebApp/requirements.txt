@@ -8,6 +8,8 @@ cryptography==40.0.2
 fastapi==0.95.1
 h11==0.14.0
 idna==3.4
+Jinja2==3.1.2
+MarkupSafe==2.1.2
 minio==7.1.15
 pycparser==2.21
 pydantic==1.10.7

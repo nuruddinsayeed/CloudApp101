@@ -10,6 +10,7 @@ from app.Configs.app_configs import AppConfig
 from app.Configs.log_cofigs import LogConfig
 
 from app.api import router as api_router
+from app.views import router as view_router
 
 
 settings = get_settings()
@@ -45,4 +46,4 @@ app = get_app()
 # configure app
 app_config = AppConfig(app=app)
 app_config.configure_startup_shoudown(log_configs=LogConfig())
-app_config.configure_router(routers=[api_router])
+app_config.configure_router(routers=[api_router, view_router])
